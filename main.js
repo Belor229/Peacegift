@@ -32,6 +32,27 @@ function getRandomPhoto() {
   return photo;
 }
 
+// Optimization: Simple image preloader
+function preloadImage(url) {
+  if (!url) return;
+  const img = new Image();
+  img.src = url;
+}
+
+// Pre-cache next screen assets
+function preCacheNext() {
+  const nextIdx = currentScreen + 1;
+  if (nextIdx < screens.length) {
+    // Pre-cache a background for the next screen
+    preloadImage(allPhotos[Math.floor(Math.random() * allPhotos.length)]);
+    
+    // Specific pre-caching for screens
+    if (screens[nextIdx].id === 'archive') {
+      allPhotos.slice(0, 10).forEach(preloadImage); // Preload some for archive gallery
+    }
+  }
+}
+
 // All screens data
 const screens = [
   {
@@ -276,6 +297,8 @@ function renderScreen(index) {
     const screenElement = screenData.render();
     screenContainer.appendChild(screenElement);
     currentScreen = index;
+    // Optimization: Kick off pre-caching for what's coming next
+    setTimeout(preCacheNext, 500);
   }
 }
 
@@ -288,8 +311,9 @@ function renderSplashScreen() {
   const section = document.createElement('section');
   section.className = 'screen splash-screen';
   
-  // Use one of the provided images - selecting a beautiful one
-  const bgImg = getRandomPhoto();
+  // Use the preloaded hero image for the splash screen
+  const bgImg = 'peace.img/IMG-20260624-WA0132.jpg';
+  if (!usedPhotos.includes(bgImg)) usedPhotos.push(bgImg);
   
   section.innerHTML = `
     <div class="splash-bg" style="background-image: url('${bgImg}')"></div>
