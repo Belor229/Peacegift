@@ -4,6 +4,34 @@ const toggleMusicBtn = document.getElementById('toggle-music');
 
 let currentScreen = 0;
 
+// All photos available in peace.img
+const allPhotos = [
+  'peace.img/IMG-20260624-WA0132.jpg', 'peace.img/IMG-20260624-WA0133.jpg', 'peace.img/IMG-20260624-WA0134.jpg',
+  'peace.img/IMG-20260624-WA0135.jpg', 'peace.img/IMG-20260624-WA0136.jpg', 'peace.img/IMG-20260624-WA0137.jpg',
+  'peace.img/IMG-20260624-WA0138.jpg', 'peace.img/IMG-20260624-WA0161.jpg', 'peace.img/IMG-20260624-WA0162.jpg',
+  'peace.img/IMG-20260624-WA0164.jpg', 'peace.img/IMG-20260624-WA0165.jpg', 'peace.img/IMG-20260624-WA0167(1).jpg',
+  'peace.img/IMG-20260624-WA0167.jpg', 'peace.img/IMG-20260624-WA0168.jpg', 'peace.img/IMG-20260624-WA0169.jpg',
+  'peace.img/IMG-20260624-WA0170.jpg', 'peace.img/IMG-20260624-WA0171.jpg', 'peace.img/IMG-20260624-WA0172.jpg',
+  'peace.img/IMG-20260624-WA0176.jpg', 'peace.img/IMG-20260624-WA0180.jpg', 'peace.img/IMG-20260624-WA0181.jpg',
+  'peace.img/IMG-20260624-WA0182.jpg', 'peace.img/IMG-20260624-WA0183.jpg', 'peace.img/IMG-20260624-WA0184.jpg',
+  'peace.img/IMG-20260624-WA0186.jpg', 'peace.img/IMG-20260624-WA0188.jpg', 'peace.img/IMG-20260624-WA0189.jpg',
+  'peace.img/IMG-20260624-WA0191.jpg', 'peace.img/IMG-20260624-WA0195.jpg', 'peace.img/IMG-20260624-WA0196.jpg',
+  'peace.img/IMG-20260624-WA0197.jpg', 'peace.img/IMG-20260624-WA0198.jpg', 'peace.img/IMG-20260624-WA0199.jpg',
+  'peace.img/IMG-20260624-WA0200.jpg', 'peace.img/IMG-20260624-WA0201.jpg', 'peace.img/IMG-20260624-WA0202.jpg'
+];
+
+let usedPhotos = [];
+
+function getRandomPhoto() {
+  if (usedPhotos.length === allPhotos.length) {
+    usedPhotos = [];
+  }
+  const availablePhotos = allPhotos.filter(p => !usedPhotos.includes(p));
+  const photo = availablePhotos[Math.floor(Math.random() * availablePhotos.length)];
+  usedPhotos.push(photo);
+  return photo;
+}
+
 // All screens data
 const screens = [
   {
@@ -33,9 +61,9 @@ const screens = [
 ];
 
 const chestData = [
-  { id: 'A', title: 'Cadeau express', photo: 'peace.img/IMG-20260624-WA0135.jpg', msg: 'C\'est toi. C\'est tout. 😴' },
-  { id: 'B', title: 'Cadeau mystérieux', photo: 'peace.img/IMG-20260624-WA0136.jpg', msg: 'Le mystère, c\'était toi depuis le début. 🌟' },
-  { id: 'C', title: 'Cadeau légendaire', photo: 'peace.img/IMG-20260624-WA0137.jpg', msg: 'Instinct de chasseuse de cadeaux. On valide. 😏' }
+  { id: 'A', title: 'Cadeau express', photo: getRandomPhoto(), msg: 'C\'est toi. C\'est tout. 😴' },
+  { id: 'B', title: 'Cadeau mystérieux', photo: getRandomPhoto(), msg: 'Le mystère, c\'était toi depuis le début. 🌟' },
+  { id: 'C', title: 'Cadeau légendaire', photo: getRandomPhoto(), msg: 'Instinct de chasseuse de cadeaux. On valide. 😏' }
 ];
 
 function renderChests() {
@@ -43,6 +71,8 @@ function renderChests() {
   section.className = 'screen chests-screen';
   
   section.innerHTML = `
+    <div class="screen-bg" style="background-image: url('${getRandomPhoto()}')"></div>
+    <div class="screen-overlay"></div>
     <div class="glass-panel chests-content fade-in">
       <h2 class="quiz-title text-gradient">🎁 Choisis. Mais choisis bien.</h2>
       <div class="chests-container">
@@ -148,6 +178,11 @@ const quizData = [
   }
 ];
 
+// Ensure each quiz question has a photo
+quizData.forEach(q => {
+  if (!q.showPhoto) q.showPhoto = getRandomPhoto();
+});
+
 function renderQuiz() {
   const section = document.createElement('section');
   section.className = 'screen quiz-screen';
@@ -157,6 +192,8 @@ function renderQuiz() {
   function showQuestion() {
     const qData = quizData[currentQ];
     section.innerHTML = `
+      <div class="screen-bg" style="background-image: url('${getRandomPhoto()}')"></div>
+      <div class="screen-overlay"></div>
       <div class="glass-panel quiz-content fade-in">
         <h2 class="quiz-title text-gradient">🧠 On te connaît mieux que tu crois</h2>
         <p class="quiz-question">${qData.q}</p>
@@ -252,7 +289,7 @@ function renderSplashScreen() {
   section.className = 'screen splash-screen';
   
   // Use one of the provided images - selecting a beautiful one
-  const bgImg = 'peace.img/IMG-20260624-WA0133.jpg';
+  const bgImg = getRandomPhoto();
   
   section.innerHTML = `
     <div class="splash-bg" style="background-image: url('${bgImg}')"></div>
@@ -279,6 +316,7 @@ function renderSplashScreen() {
 
   section.querySelector('#start-btn').addEventListener('click', () => {
     if (audio.paused) {
+      audio.currentTime = 4; // Start at 4 seconds as requested
       audio.play().catch(e => console.log('Audio autoplay blocked', e));
     }
     nextScreen();
@@ -327,6 +365,8 @@ function renderPatience() {
   const section = document.createElement('section');
   section.className = 'screen patience-screen';
   section.innerHTML = `
+    <div class="screen-bg" style="background-image: url('${getRandomPhoto()}')"></div>
+    <div class="screen-overlay"></div>
     <div class="glass-panel patience-content fade-in">
       <h2 class="quiz-title text-gradient">⏳ Encore un peu de patience, Peace.</h2>
       <div class="progress-container">
@@ -388,7 +428,7 @@ function renderRevelation() {
   const section = document.createElement('section');
   section.className = 'screen revelation-screen';
   
-  const mainPhoto = 'peace.img/IMG-20260624-WA0198.jpg'; // Selection of a beautiful photo
+  const mainPhoto = getRandomPhoto();
 
   section.innerHTML = `
     <div class="revelation-bg" style="background-image: url('${mainPhoto}')"></div>
@@ -477,14 +517,16 @@ function renderArchive() {
   section.className = 'screen archive-screen';
   
   const galleryPhotos = [
-    { p: 'peace.img/IMG-20260624-WA0132.jpg', l: "Elle dormait encore. 😴" },
-    { p: 'peace.img/IMG-20260624-WA0138.jpg', l: "Ce regard-là. Celui qui dit tout. 🫶" },
-    { p: 'peace.img/IMG-20260624-WA0161.jpg', l: "La fille qui n'oublie jamais ton anniversaire. 🎂" },
-    { p: 'peace.img/IMG-20260624-WA0162.jpg', l: "Docteur Peace en dehors des heures de consultation. 🩺" },
-    { p: 'peace.img/IMG-20260624-WA0164.jpg', l: "Simplement elle." }
+    { p: getRandomPhoto(), l: "Elle dormait encore. 😴" },
+    { p: getRandomPhoto(), l: "Ce regard-là. Celui qui dit tout. 🫶" },
+    { p: getRandomPhoto(), l: "La fille qui n'oublie jamais ton anniversaire. 🎂" },
+    { p: getRandomPhoto(), l: "Docteur Peace en dehors des heures de consultation. 🩺" },
+    { p: getRandomPhoto(), l: "Simplement elle." }
   ];
 
   section.innerHTML = `
+    <div class="screen-bg" style="background-image: url('${getRandomPhoto()}')"></div>
+    <div class="screen-overlay"></div>
     <div class="archive-container glass-panel fade-in">
       <header class="archive-header">
         <h1 class="text-gradient">📁 PEACE ARCHIVE</h1>
@@ -533,8 +575,8 @@ function renderArchive() {
         <h3 class="section-title">💌 NOTE FINALE</h3>
         <p>"Ce projet n'est pas un cadeau. C'est une trace."</p>
         <p>"Tu fais partie des personnes qui rendent les autres meilleurs sans s'en rendre compte."</p>
-        <p>"Et si un jour tu te demandes si tu comptes pour les gens qui t'entourent, reviens ici."</p>
-        <p class="signature">Odirick Belor & Charbelle 🤙</p>
+        <p>"Et si un jour tu te demander si tu comptes pour les gens qui t'entourent, reviens ici."</p>
+        <p class="signature">ODRX</p>
       </footer>
     </div>
   `;
