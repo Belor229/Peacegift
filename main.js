@@ -575,8 +575,8 @@ function renderArchive() {
         <h3 class="section-title">💌 NOTE FINALE</h3>
         <p>"Ce projet n'est pas un cadeau. C'est une trace."</p>
         <p>"Tu fais partie des personnes qui rendent les autres meilleurs sans s'en rendre compte."</p>
-        <p>"Et si un jour tu te demander si tu comptes pour les gens qui t'entourent, reviens ici."</p>
-        <p class="signature">ODRX</p>
+        <p>"Et si un jour tu te demandes si tu comptes pour les gens qui t'entourent, reviens ici."</p>
+        <p class="signature">Odirick Belor & Charbelle 🤙</p>
       </footer>
     </div>
   `;
